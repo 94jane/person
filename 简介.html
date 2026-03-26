@@ -1,0 +1,468 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>张女士 - 个人简历</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: "Microsoft YaHei", Arial, sans-serif;
+        }
+        :root {
+            --primary: #409eff;
+            --light-gray: #f5f7fa;
+            --dark-gray: #333;
+            --gray: #666;
+            --light-border: #e5e6eb;
+            --shadow: 0 2px 12px 0 rgba(0,0,0,0.1);
+            --transition: all 0.3s ease;
+        }
+        body {
+            background-color: var(--light-gray);
+            color: var(--dark-gray);
+            line-height: 1.6;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        .resume-card {
+            background: #fff;
+            border-radius: 12px;
+            box-shadow: var(--shadow);
+            overflow: hidden;
+        }
+        /* 导航栏 */
+        .nav {
+            border-top: 1px solid var(--light-border);
+            border-bottom: 1px solid var(--light-border);
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+        .nav-item {
+            padding: 15px 20px;
+            cursor: pointer;
+            transition: var(--transition);
+            font-size: 16px;
+            font-weight: 500;
+        }
+        .nav-item.active {
+            color: var(--primary);
+            border-bottom: 3px solid var(--primary);
+        }
+        .nav-item:hover {
+            color: var(--primary);
+            background-color: rgba(64,158,255,0.05);
+        }
+        /* 内容区域 */
+        .content {
+            padding: 30px;
+            min-height: 500px;
+        }
+        .content-section {
+            display: none;
+        }
+        .content-section.active {
+            display: block;
+            animation: fadeIn 0.5s ease;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        /* 通用标题样式 */
+        .section-title {
+            font-size: 22px;
+            color: var(--primary);
+            margin-bottom: 20px;
+            padding-left: 10px;
+            border-left: 4px solid var(--primary);
+        }
+        /* 个人简介样式 */
+        .info-list {
+            list-style: none;
+            font-size: 18px;
+            margin-bottom: 20px;
+        }
+        .info-list li {
+            margin: 15px 0; /* 增加行间距，避免拥挤 */
+            display: flex;
+            align-items: flex-start; /* 改为顶部对齐，优化视觉 */
+            flex-wrap: wrap; /* 兼容小宽度场景 */
+        }
+        .info-list li span.label { /* 单独给标签文字加类名，精准控制 */
+            width: 100px;
+            font-weight: 500;
+            color: var(--gray);
+            flex-shrink: 0;
+            display: inline-block;
+        }
+        /* 标签容器：优化间距和对齐 */
+        .tag-container {
+            display: flex;
+            flex-wrap: nowrap;
+            gap: 12px; /* 增大标签间距，解决层叠 */
+            align-items: center;
+            white-space: nowrap;
+            padding: 2px 0; /* 增加上下内边距，提升舒适度 */
+            flex: 1; /* 占据剩余宽度，避免挤压 */
+        }
+        /* 求职标签 优化样式，解决层叠 */
+        .personal-tag {
+            background-color: rgba(64,158,255,0.1);
+            color: var(--primary);
+            padding: 8px 24px; /* 优化内边距，宽度更合理 */
+            border-radius: 30px;
+            font-size: 16px;
+            white-space: nowrap;
+            flex-shrink: 0;
+            box-shadow: 0 1px 3px rgba(64,158,255,0.15); /* 增加轻微阴影，提升层次 */
+            transition: var(--transition);
+        }
+        /* 标签hover效果，增强交互 */
+        .personal-tag:hover {
+            background-color: rgba(64,158,255,0.2);
+            transform: translateY(-1px);
+        }
+        /* 通用经历/教育样式 */
+        .timeline-item {
+            border-left: 2px solid var(--primary);
+            padding-left: 20px;
+            margin: 30px 0;
+            position: relative;
+        }
+        .timeline-item::before {
+            content: '';
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background: var(--primary);
+            position: absolute;
+            left: -6px;
+            top: 0;
+        }
+        .timeline-header {
+            display: flex;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            margin-bottom: 10px;
+        }
+        .timeline-company {
+            font-size: 18px;
+            font-weight: 600;
+        }
+        .timeline-time {
+            color: var(--gray);
+        }
+        .timeline-position {
+            color: var(--primary);
+            font-weight: 500;
+            margin-bottom: 10px;
+        }
+        .timeline-content {
+            font-size: 14px;
+            color: var(--dark-gray);
+            line-height: 1.8;
+        }
+        .timeline-content p {
+            margin: 8px 0;
+        }
+        .timeline-content ul {
+            margin-left: 20px;
+            margin-bottom: 10px;
+        }
+        /* 技能样式 */
+        .skill-list {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+        .skill-item {
+            width: calc(50% - 7.5px);
+            background: var(--light-gray);
+            padding: 15px;
+            border-radius: 8px;
+            transition: var(--transition);
+        }
+        .skill-item:hover {
+            box-shadow: var(--shadow);
+            transform: translateY(-3px);
+        }
+        .skill-title {
+            font-weight: 600;
+            color: var(--primary);
+            margin-bottom: 10px;
+        }
+        .skill-desc {
+            font-size: 14px;
+            color: var(--gray);
+        }
+        /* 证书荣誉样式 */
+        .honor-list {
+            list-style: none;
+        }
+        .honor-item {
+            background: var(--light-gray);
+            padding: 12px 15px;
+            border-radius: 8px;
+            margin: 10px 0;
+            transition: var(--transition);
+        }
+        .honor-item:hover {
+            box-shadow: var(--shadow);
+            border-left: 4px solid var(--primary);
+        }
+        /* 移动端适配 */
+        @media (max-width: 768px) {
+            .container {
+                padding: 10px;
+            }
+            .nav-item {
+                padding: 12px 10px;
+                font-size: 14px;
+            }
+            .content {
+                padding: 20px;
+            }
+            .skill-item {
+                width: 100%;
+            }
+            .timeline-header {
+                flex-direction: column;
+                gap: 5px;
+            }
+            .info-list li {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 8px;
+            }
+            .tag-container {
+                flex-wrap: wrap;
+                gap: 8px;
+            }
+            .personal-tag {
+                padding: 6px 16px;
+                font-size: 14px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="resume-card">
+            <!-- 导航栏 -->
+            <div class="nav">
+                <div class="nav-item active" data-target="intro">个人简介</div>
+                <div class="nav-item" data-target="work">工作经历</div>
+                <div class="nav-item" data-target="education">教育背景</div>
+                <div class="nav-item" data-target="skill">技能特长</div>
+                <div class="nav-item" data-target="honor">证书荣誉</div>
+            </div>
+
+            <!-- 内容区域 -->
+            <div class="content">
+                <!-- 个人简介 -->
+                <div class="content-section active" id="intro">
+                    <h2 class="section-title">个人简介</h2>
+                    <ul class="info-list">
+                        <li><span class="label">姓名：</span>张女士</li>
+                        <li><span class="label">出生年月：</span>1994.11</li>
+                        <li><span class="label">联系电话：</span>18010181641</li>
+                        <li><span class="label">电子邮箱：</span>1209799655@qq.com</li>
+                        <li>
+                            <span class="label">求职标签：</span>
+                            <div class="tag-container">
+                                <span class="personal-tag">服务端测试专家</span>
+                                <span class="personal-tag">AI测试应用</span>
+                                <span class="personal-tag">测试开发</span>
+                                <span class="personal-tag">团队管理</span>
+                                <span class="personal-tag">大型项目落地</span>
+                            </div>
+                        </li>
+                    </ul>
+                    <p style="color: var(--gray); font-size: 16px; line-height: 1.8;">
+                        计算机科学与技术学士，10年+服务端测试开发经验，深耕支付、直播营收、活动等领域，具备小团队管理及大型项目owner经验。
+                        擅长AI测试应用落地、自动化测试建设、线上稳定性治理，精通Java/SQL/自动化框架，通过AI工具、自动化平台实现测试提效，
+                        多次保障大型项目无重大线上故障，累计助力业务营收超20亿。
+                    </p>
+                </div>
+
+                <!-- 工作经历 -->
+                <div class="content-section" id="work">
+                    <h2 class="section-title">工作经历</h2>
+                    <!-- 快手-直播营收产品 -->
+                    <div class="timeline-item">
+                        <div class="timeline-header">
+                            <div class="timeline-company">快手 - 直播营收产品</div>
+                            <div class="timeline-time">2023.4 - 至今</div>
+                        </div>
+                        <div class="timeline-position">服务端 | 测试专家工程师（内部晋升）| 虚线负责人（12正式+13外包+7离岸）</div>
+                        <div class="timeline-content">
+                            <p>负责营收产品增值&付费&礼物业务（30+基础营收子玩法），快速识别业务方向，保障业务如期上线并实现线上收益，无线上重大故障。核心成果：</p>
+                            <ul>
+                                <li>AI测试小助手：基于OpenClaw执行引擎打造AI驱动的测试助手，覆盖需求评审到上线全生命周期，实现效率提升+AI自动评测闭环（建设中）。</li>
+                                <li>智驭AI系统：实现AI问题分发、推理、排障等能力，25年11月将技术支持问题拦截率从54.9%提升至61.2%，有效bug率从34.7%提升至51.7%。</li>
+                                <li>AIGC礼物评测：搭建评测体系，准确率70+%、误伤率17.11%，赋能业务自行验证，减少测试工作量。</li>
+                                <li>AI配置检测：25年10月上线后召回配置问题10+，实现业务/需求配置AI自动化检测。</li>
+                                <li>礼物上新自动化平台：单款礼物测试耗时从0.5~1天缩短至分钟级，每年支撑300+款礼物上新。</li>
+                                <li>业务测试白盒化：梳理营收业务策略，为日常测试提效及AI测试助手提供基础Skills。</li>
+                            </ul>
+                            <p>同时负责自动化建设、测试环境搭建、压测、线上问题治理等，实现竞对策略自动分析、AI需求上线分析等业务赋能。</p>
+                        </div>
+                    </div>
+                    <!-- 快手-直播活动 -->
+                    <div class="timeline-item">
+                        <div class="timeline-header">
+                            <div class="timeline-company">快手 - 直播活动</div>
+                            <div class="timeline-time">2021.11 - 2023.3</div>
+                        </div>
+                        <div class="timeline-position">服务端 | 资深测试开发工程师（2022年底晋升）| 虚线负责人（7正式+5外包）</div>
+                        <div class="timeline-content">
+                            <p>负责直播营收活动业务，全年近30场活动，单场大型活动（如盛典）流水增长3亿+，累计收益近20亿，保障活动如期上线且无重大线上故障。核心成果：</p>
+                            <ul>
+                                <li>配置标记平台：沉淀玩法组件测试方法，实现配置场景关联与检测，减少50%线上配置错误问题，提升测试效率。</li>
+                                <li>活动线上自动巡检：将人工巡检转化为自动化巡检，搭建巡检平台，小活动纯自动化、大活动关键赛点人工+自动化，减少人工巡检成本和频率。</li>
+                            </ul>
+                        </div>
+                    </div>
+                    <!-- 快手-支付 -->
+                    <div class="timeline-item">
+                        <div class="timeline-header">
+                            <div class="timeline-company">快手 - 支付</div>
+                            <div class="timeline-time">2021.3 - 2021.11</div>
+                        </div>
+                        <div class="timeline-position">服务端 | 资深测试开发工程师 | 海外支付QA负责人（4正式+2外包）</div>
+                        <div class="timeline-content">
+                            <p>负责海外支付业务（交易、提现、钱包、分账等）及底层余额体系、账户清算建设，参与支付0->1测试基础建设，规范测试流程，搭建staging/prt环境，完成数据构造、Mock、自动化、多渠道稳定性等能力建设，确保项目快速上线并及时召回线上问题。</p>
+                        </div>
+                    </div>
+                    <!-- 快手-CNY活动 -->
+                    <div class="timeline-item">
+                        <div class="timeline-header">
+                            <div class="timeline-company">快手 - CNY活动</div>
+                            <div class="timeline-time">2020.11 - 2021.2</div>
+                        </div>
+                        <div class="timeline-position">服务端 | 资深测试开发工程师 | 稳定性压测接口人、视频红包服务端测试主R</div>
+                        <div class="timeline-content">
+                            <p>协同300+人参与21年春节活动，保障活动0稳定性性能问题、0功能问题，核心成果：</p>
+                            <ul>
+                                <li>搭建全链路压测规范及新版压测平台，支持千万级QPS、30+业务线混合压测。</li>
+                                <li>0成本搭建公网压测能力，相较于去年节省数百万压测成本。</li>
+                                <li>规范公司压测标准，优化流量预估数据，解决亿级账号模拟、多业务混合压测等难点。</li>
+                                <li>沉淀大型活动压测经验，赋能后续活动及其他业务。</li>
+                            </ul>
+                        </div>
+                    </div>
+                    <!-- 滴滴金融 -->
+                    <div class="timeline-item">
+                        <div class="timeline-header">
+                            <div class="timeline-company">滴滴金融</div>
+                            <div class="timeline-time">2018.04 - 2020.11</div>
+                        </div>
+                        <div class="timeline-position">服务端 | 资深测试开发工程师（内部晋升）| 三方支付&账务&理财业务QA接口人（8正式+4外包）</div>
+                        <div class="timeline-content">
+                            <p>参与三方支付0->1测试建设，负责账务、理财业务测试，覆盖全流程质量建设与稳定性保障，核心成果：</p>
+                            <ul>
+                                <li>三方支付：完成测试流程规范、环境搭建、自动化建设，实现项目初期快速上线、中期稳定性保障（故障发现、服务保护、全链路压测）。</li>
+                                <li>账务：搭建对账工具，支撑DCEP等金融战略需求上线，保障各业务线发展。</li>
+                                <li>理财：支撑平安银行、弘康投连险等产品上线，将线下环境搭建时长从0.5天缩短至0.5小时，大幅提升测试效率。</li>
+                            </ul>
+                        </div>
+                    </div>
+                    <!-- 美团外卖 -->
+                    <div class="timeline-item">
+                        <div class="timeline-header">
+                            <div class="timeline-company">美团外卖</div>
+                            <div class="timeline-time">2016.9 - 2018.4</div>
+                        </div>
+                        <div class="timeline-position">服务端 | 高级测试开发工程师（内部晋升）</div>
+                        <div class="timeline-content">
+                            <p>独立负责外卖活动设置平台测试，保障10类活动的业务逻辑与互斥规则符合需求，核心成果：</p>
+                            <ul>
+                                <li>参与测试工具开发，基于Spring MVC/Thrift/Mybatis搭建环境监控工具、测试数据平台。</li>
+                                <li>构建活动配置自动化体系，实现链路全覆盖，封装业务方法提升测试人效。</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 教育背景 -->
+                <div class="content-section" id="education">
+                    <h2 class="section-title">教育背景</h2>
+                    <div class="timeline-item" style="margin-top: 0;">
+                        <div class="timeline-header">
+                            <div class="timeline-company">大连大学</div>
+                            <div class="timeline-time">2012.9 - 2016.7</div>
+                        </div>
+                        <div class="timeline-position">计算机科学与技术 | 学士学位 | 专业排名前3%</div>
+                    </div>
+                </div>
+
+                <!-- 技能特长 -->
+                <div class="content-section" id="skill">
+                    <h2 class="section-title">技能特长</h2>
+                    <div class="skill-list">
+                        <div class="skill-item">
+                            <div class="skill-title">团队管理与项目经验</div>
+                            <div class="skill-desc">小团队管理经验，大型支付/活动/直播项目owner经验，线上稳定性建设实战经验；带领多团队（正式+外包+离岸）落地核心业务，保障无重大线上故障。</div>
+                        </div>
+                        <div class="skill-item">
+                            <div class="skill-title">AI测试应用</div>
+                            <div class="skill-desc">搭建Agent、自动化评测、数据智能分析系统；实现AI测试助手、AI配置检测、AIGC礼物评测等，替代重复人工，大幅提升测试效率。</div>
+                        </div>
+                        <div class="skill-item">
+                            <div class="skill-title">编程语言与框架</div>
+                            <div class="skill-desc">精通Java语言，掌握集合、多线程、Spring MVC；熟练运用到测试工具、自动化平台开发中；Vibe Coding快速产出测试脚本、工具、平台页面。</div>
+                        </div>
+                        <div class="skill-item">
+                            <div class="skill-title">数据库与网络</div>
+                            <div class="skill-desc">熟悉SQL语句，掌握Mybatis、Mysql、Redis等数据库使用；了解TCP/IP、HTTP等网络协议，支撑服务端测试全流程数据操作与问题定位。</div>
+                        </div>
+                        <div class="skill-item">
+                            <div class="skill-title">自动化测试</div>
+                            <div class="skill-desc">精通TestNG、Junit自动化测试框架；熟练设计单接口、场景级、预发环境自动化用例，并落地到CI/CD；搭建自动化平台、巡检平台，实现测试流程自动化。</div>
+                        </div>
+                        <div class="skill-item">
+                            <div class="skill-title">业务与工程能力</div>
+                            <div class="skill-desc">深耕支付、直播营收、活动领域，具备0->1测试建设能力；掌握全链路压测、线上问题治理、环境搭建、数据构造、Mock等工程能力；沉淀业务测试方法与工具。</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 证书荣誉 -->
+                <div class="content-section" id="honor">
+                    <h2 class="section-title">证书荣誉</h2>
+                    <ul class="honor-list">
+                        <li class="honor-item">工作类：多次获得优秀个人、优秀导师，多个专项获部门奖励</li>
+                        <li class="honor-item">奖学金类：国家奖学金、大连市政府奖学金、优秀学生干部奖学金</li>
+                        <li class="honor-item">竞赛类：美国大学生数学建模竞赛国际一等奖、全国大学生数学建模竞赛国家二等奖/省二等奖</li>
+                        <li class="honor-item">竞赛类：“电工杯”数学建模竞赛国家三等奖、东北三省数学建模竞赛省二等奖</li>
+                        <li class="honor-item">荣誉类：大连市优秀毕业生</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // 导航栏切换逻辑
+        const navItems = document.querySelectorAll('.nav-item');
+        const contentSections = document.querySelectorAll('.content-section');
+        navItems.forEach(item => {
+            item.addEventListener('click', () => {
+                navItems.forEach(nav => nav.classList.remove('active'));
+                contentSections.forEach(sec => sec.classList.remove('active'));
+                item.classList.add('active');
+                const target = item.dataset.target;
+                document.getElementById(target).classList.add('active');
+            });
+        });
+    </script>
+</body>
+</html>
